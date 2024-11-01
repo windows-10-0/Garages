@@ -3,6 +3,7 @@ import GarageCarCard from "./components/GarageCarCard.jsx";
 import { useState, useEffect } from "react";
 import { fetchData } from "./Fetch.jsx";
 import { LiaFrownSolid } from "react-icons/lia";
+import "./scrollbar.css";
 
 function App() {
   const [nui, setNui] = useState(false);
@@ -88,20 +89,25 @@ function App() {
                 locale.impound_title}
             </div>
           </div>
-          <div className="flex flex-col gap-3 items-center justify-center mt-[80px] w-full">
+          <div
+            className="flex flex-col h-full gap-3 justify-start items-center mt-[80px] w-full overflow-y-auto"
+            style={{ maxHeight: "calc(95% - 80px)" }}
+          >
             {ownedVehicles.length > 0 ? (
-              ownedVehicles.map((vehicle) => (
-                <GarageCarCard
-                  key={vehicle.plate}
-                  type={type}
-                  locale={locale}
-                  vehSpawnCoords={vehSpawnCoords}
-                  vehicle={vehicle}
-                  setNui={setNui}
-                  price={price}
-                  className="transition-transform transform hover:scale-105"
-                />
-              ))
+              <div className="flex flex-col gap-3 w-full items-center">
+                {ownedVehicles.map((vehicle) => (
+                  <GarageCarCard
+                    key={vehicle.plate}
+                    type={type}
+                    locale={locale}
+                    vehSpawnCoords={vehSpawnCoords}
+                    vehicle={vehicle}
+                    setNui={setNui}
+                    price={price}
+                    className="transition-transform transform hover:scale-105"
+                  />
+                ))}
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <div>

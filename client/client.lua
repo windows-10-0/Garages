@@ -45,7 +45,7 @@ Citizen.CreateThread(function()
         SetBlipColour(blip, garage.blip.color)
         SetBlipAsShortRange(blip, garage.blip.shortRange)
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(name)
+        AddTextComponentString(garage.blip.label)
         EndTextCommandSetBlipName(blip)
 
         RequestModel(GetHashKey(garage.ped))
@@ -90,7 +90,7 @@ Citizen.CreateThread(function()
         SetBlipColour(blip, impound.blip.color)
         SetBlipAsShortRange(blip, impound.blip.shortRange)
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(name)
+        AddTextComponentString(impound.blip.label)
         EndTextCommandSetBlipName(blip)
 
         RequestModel(GetHashKey(impound.ped))
@@ -148,15 +148,33 @@ RegisterNUICallback("getOwnedVehicles", function(data, cb)
 end)
 
 RegisterNUICallback("handleGarage", function(data, cb)
-    ESX.TriggerServerCallback("garage:server:handleGarage", function(response)
-        if response.success then
-            local spawnedVehicle = NetworkGetEntityFromNetworkId(response.spawnedVehicle)
-            TaskWarpPedIntoVehicle(PlayerPedId(), spawnedVehicle, -1)
-            cb(true)
-        else
+    local handle = function ()
+        ESX.TriggerServerCallback("garage:server:handleGarage", function(response)
+            if response.success then
+                local spawnedVehicle = NetworkGetEntityFromNetworkId(response.spawnedVehicle)
+                while not DoesEntityExist(spawnedVehicle) do 
+                    Wait(0)
+                    spawnedVehicle = NetworkGetEntityFromNetworkId(response.spawnedVehicle)
+                end
+                TaskWarpPedIntoVehicle(PlayerPedId(), spawnedVehicle, -1)
+                cb(true)
+            else
+                cb(false)
+            end
+        end, data.vehSpawnCoords, data.vehicle)
+    end
+    
+    if Settings.spawnChecker.enabled then
+        local nearbyVehicles = ESX.Game.GetVehiclesInArea(vector3(data.vehSpawnCoords.x, data.vehSpawnCoords.y, data.vehSpawnCoords.z), Settings.spawnChecker.distance)
+        if #nearbyVehicles > 0 then
             cb(false)
+            Settings.Notify(Locales[Settings.locale].notify_title, Locales[Settings.locale].notify_spawn_checker)
+        else
+            handle()
         end
-    end, data.vehSpawnCoords, data.vehicle)
+    else
+        handle()
+    end    
 end)
 
 RegisterNUICallback('handleImpound', function(data, cb)

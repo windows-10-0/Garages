@@ -18,4 +18,5 @@ Locales["en"] = {
     notify_car_saved = "You parked your car in the garage.",
     notify_impound_success = "You paid $%s for impound.",
     notify_car_not_player = "You can't save a car that is not yours.",
+    notify_spawn_checker = "There is a vehicle in area, wait for vehicles to move."
 }

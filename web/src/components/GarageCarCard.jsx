@@ -39,7 +39,9 @@ function GarageCarCard({
   price,
 }) {
   return (
-    <div className="w-4/5 flex h-[85px] bg-gray-900 text-white rounded">
+    <div className="w-4/5 flex h-[85px] bg-gray-900 text-white rounded items-center">
+      {" "}
+      {/* Added items-center */}
       <div className="border-2 ml-1 bg-emerald-400/10 border-emerald-400/60 rounded">
         <img
           src={`./images/${vehicle.model.toLowerCase()}.png`}
@@ -67,9 +69,9 @@ function GarageCarCard({
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center ml-auto mr-5">
+      <div className="flex justify-center items-center ml-auto mr-5 relative">
         <img src="./plate.png" className="h-[60px] w-auto" />
-        <p className="font-['Oxanium'] absolute mt-3 font-bold text-[23px] text-black/80">
+        <p className="font-['Oxanium'] absolute mt-2 inset-0 flex items-center justify-center font-bold text-[22px] text-black/80 z-10">
           {vehicle.plate}
         </p>
       </div>

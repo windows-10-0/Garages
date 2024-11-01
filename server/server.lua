@@ -25,7 +25,6 @@ ESX.RegisterServerCallback('garage:server:handleGarage', function(source, cb, co
         if not updated then return cb({success = false}) end
 
         ESX.OneSync.SpawnVehicle(vehicle.model, vector3(coords.x, coords.y, coords.z), coords.w, vehicle, function(spawnedVehicle)
-            Wait(200)
             cb({success = spawnedVehicle ~= nil, spawnedVehicle = spawnedVehicle})
         end)
     end)
